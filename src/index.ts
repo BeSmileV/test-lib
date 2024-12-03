@@ -1,0 +1,1 @@
+export {TestComp, type TestCompPropsType} from './TestComp'

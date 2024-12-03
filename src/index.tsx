@@ -1,1 +1,0 @@
-export {ExampleComponent, PropsType, ClassNameType} from './ExampleComponent';

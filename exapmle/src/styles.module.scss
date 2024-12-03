@@ -1,0 +1,16 @@
+.test {
+  background-color: black;
+  .label {
+    background-color: white;
+  }
+  .icon {
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+    background-color: blue;
+  }
+  .btn {
+    background-color: red;
+  }
+}

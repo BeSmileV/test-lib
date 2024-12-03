@@ -1,0 +1,33 @@
+.test {
+  width: 500px;
+  height: 300px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.active {
+    background-color: red;
+  }
+
+  .icon {
+    svg {
+      flex: none;
+      width: 20px;
+      height: 20px;
+
+      * {
+        stroke: aquamarine;
+      }
+    }
+  }
+
+  .label {
+    background-color: aqua;
+  }
+
+  .btn {
+    background-color: cornflowerblue;
+    border-radius: 8px;
+  }
+}

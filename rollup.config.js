@@ -1,45 +1,51 @@
-import typescript from 'rollup-plugin-typescript2';
-import commonjs from '@rollup/plugin-commonjs';
-import external from 'rollup-plugin-peer-deps-external';
-import postcss from 'rollup-plugin-postcss';
-import resolve from '@rollup/plugin-node-resolve';
-import url from 'rollup-plugin-url';
+import resolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
+import typescript from "@rollup/plugin-typescript";
+import dts from "rollup-plugin-dts";
+import terser from "@rollup/plugin-terser";
+import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import svgr from '@svgr/rollup';
-import pkg from './package.json';
 
-export default {
-    input: 'src/index.tsx',
-    output: [
-        {
-            file: pkg.main,
-            format: 'cjs',
-            exports: 'named',
-            sourcemap: true
-        },
-        {
-            file: pkg.module,
-            format: 'es',
-            exports: 'named',
-            sourcemap: true
-        }
-    ],
-    plugins: [
-        external(),
-        postcss({
-            modules: true,
-            extract: false, // попробовать решить эту проблему
-            minimize: true,
-            sourceMap: true,
-            use: ['sass'],
-        }),
-        url(),
-        svgr(),
-        resolve(),
-        typescript({
-            rollupCommonJSResolveHack: true,
-            clean: true
-        }),
-        commonjs(),
-    ],
-    external: ['react', 'react-dom'],
-};
+import postcss from "rollup-plugin-postcss";
+
+const packageJson = require("./package.json");
+
+export default [
+    {
+        input: "src/index.ts",
+        output: [
+            {
+                file: packageJson.main,
+                format: "cjs",
+                sourcemap: true,
+            },
+            {
+                file: packageJson.module,
+                format: "esm",
+                sourcemap: true,
+            },
+        ],
+        plugins: [
+            peerDepsExternal(),
+            resolve(),
+            commonjs(),
+            typescript({tsconfig: "./tsconfig.json"}),
+            terser(),
+            svgr(),
+            postcss({
+                extensions: ['.css', '.scss'], // Поддержка CSS и SCSS
+                // extract: true, // Вынести стили в отдельный файл
+                minimize: true, // Минификация CSS
+                modules: true, // Если нужны CSS-модули
+                use: ['sass'], // Указываем, что нужно использовать Sass
+            }),
+        ],
+        external: ["react", "react-dom"],
+    },
+    {
+        input: "src/index.ts",
+        output: [{file: packageJson.types}],
+        plugins: [dts.default()],
+        external: [/\.css$/],
+    },
+];
